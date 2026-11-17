@@ -11,8 +11,11 @@ import re
 from collections import Counter
 from pathlib import Path
 
+import sys
+
 import matplotlib
-matplotlib.use("Agg")
+if "ipykernel" not in sys.modules:      # headless scripts; notebooks keep their inline backend
+    matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -281,8 +284,13 @@ def fig_tradeoff(tab: pd.DataFrame):
     for a, x, xl in ((ax[0], "Params (M)", "parameters (millions)"), (ax[1], "Train time (min)", "training time (minutes)")):
         a.scatter(tab[x], tab["Test BPC"], c=col, s=55, edgecolor="k", lw=0.5, zorder=3)
         for _, r in tab.iterrows():
-            a.annotate(r.Run.replace("E1_", "").replace("E2_lstm_", "").replace("E3_lstm_", ""),
-                       (r[x], r["Test BPC"]), xytext=(4, 4), textcoords="offset points", fontsize=7.5)
+            lab = r.Run.replace("E1_", "").replace("E2_lstm_", "").replace("E3_lstm_", "")
+            if x == "Params (M)" and r.Run.startswith("E2_"):
+                continue                      # same size as E1_lstm -> one shared label
+            if x == "Params (M)" and r.Run == "E1_lstm":
+                lab = "lstm 256×2 (seq 32–256)"
+            a.annotate(lab, (r[x], r["Test BPC"]), xytext=(4, 4), textcoords="offset points", fontsize=7.5,
+                       ha="right" if x == "Params (M)" and r[x] > 0.8 else "left")
         a.set_xlabel(xl); a.set_ylabel("test BPC")
     ax[0].set_title("Accuracy vs model size"); ax[1].set_title("Accuracy vs compute")
     return _save(fig, "tradeoff")

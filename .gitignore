@@ -7,3 +7,8 @@ results_run.log
 report/node_modules/
 report/preview/
 report/package*.json
+report/preview/
+report/s1.png
+report/s2.png
+report/toc_*.json
+report/node_modules
