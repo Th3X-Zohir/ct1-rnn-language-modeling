@@ -1,7 +1,7 @@
 # CT1 Task 3 — Character-Level Language Modeling with RNN, GRU and LSTM
 
 **Course:** CSE638 Deep Learning, Daffodil International University · **Assignment:** Group Assignment 1 (CT1), Task 3 (RNN / Sequence Modeling)
-**Group:** Recurrent Minds — Shafin Ahmed (262-25-035), Zohir Rayhan (262-25-036), Sheikh Ajwad (262-25-337)
+**Group:** Recurrent Minds — Shafin Ahmed (262-25-035), Zohir Rayhan (262-25-036), Sheikh Ajwad (262-25-037)
 
 We train character-level language models on six Jane Austen novels from Project Gutenberg and compare:
 

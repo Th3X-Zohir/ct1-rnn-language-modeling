@@ -17,7 +17,7 @@ md("""
 |---|---|
 | Shafin Ahmed | 262-25-035 |
 | Zohir Rayhan | 262-25-036 |
-| Sheikh Ajwad | 262-25-337 |
+| Sheikh Ajwad | 262-25-037 |
 
 **Task (from the assignment sheet):** *Train an RNN (vanilla, GRU, simple LSTM) for character-level or word-level language
 modeling / text generation … compare different RNN variants, sequence length effects, sampling strategies, and perplexity.*

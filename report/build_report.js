@@ -18,7 +18,7 @@ const META = {
   members: [
     ["Shafin Ahmed", "262-25-035", "262-25-035@diu.edu.bd"],
     ["Zohir Rayhan", "262-25-036", "262-25-036@diu.edu.bd"],
-    ["Sheikh Ajwad", "262-25-337", "262-25-337@diu.edu.bd"],
+    ["Sheikh Ajwad", "262-25-037", "262-25-037@diu.edu.bd"],
   ],
   teacher: ["Sadat Hasan", "Adjunct Faculty", "Department of Computer Science and Engineering", "Daffodil International University"],
   date: "17 November 2026",
