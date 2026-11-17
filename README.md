@@ -15,7 +15,23 @@ We train character-level language models on six Jane Austen novels from Project 
 
 Metrics: bits per character (BPC) and character perplexity on a held-out test split.
 
-<!-- RESULTS -->
+## Key results (test set, lower BPC = better)
+
+| Model | Params | Test BPC | Test PPL |
+|---|---|---|---|
+| Unigram entropy (no context) | – | 4.411 | 21.27 |
+| Witten-Bell 5-gram (best n-gram) | – | 1.653 | 3.14 |
+| Vanilla RNN 256×2 | 0.24 M | 1.766 | 3.40 |
+| LSTM 256×2 | 0.88 M | 1.726 | 3.31 |
+| LSTM 384×2 | 1.91 M | 1.599 | 3.03 |
+| **GRU 256×2 (best)** | 0.67 M | **1.585** | **3.00** |
+
+* **Cell type:** under an equal 2,500-step budget the GRU learns fastest and is best; the LSTM starts slowly but overtakes the vanilla RNN.
+* **Sequence length:** 32 → 256 characters improves the LSTM only from 1.736 to 1.720 BPC.
+* **Capacity:** hidden size is the strongest lever (128 → 384 units: 2.027 → 1.599); 2 layers beat 1, a 3rd layer does not pay off within the budget.
+* **Sampling:** greedy decoding loops (78 % repeated 4-grams); nucleus (p = 0.9) gives the best spelling/diversity balance.
+
+Full analysis: [`report/CT1_Task3_Report_Recurrent_Minds.pdf`](report/CT1_Task3_Report_Recurrent_Minds.pdf)
 
 ## Repository layout
 ```
