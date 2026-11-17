@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+data/raw/
+data/processed/*.txt
+results_run.log
+report/node_modules/
+report/preview/
+report/package*.json
