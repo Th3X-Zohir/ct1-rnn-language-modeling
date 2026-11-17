@@ -21,7 +21,7 @@ const META = {
     ["Sheikh Ajwad", "262-25-037", "262-25-037@diu.edu.bd"],
   ],
   teacher: ["Sadat Hasan", "Adjunct Faculty", "Department of Computer Science and Engineering", "Daffodil International University"],
-  date: "17 November 2026",
+  date: "17.11.2026",
   repo: process.env.REPO_URL || "https://github.com/Th3X-Zohir/ct1-rnn-language-modeling",
 };
 
@@ -37,40 +37,27 @@ const n0 = (x) => Number(x).toLocaleString("en-US");
 
 // ------------------------------------------------------------------ cover page
 function cover() {
-  const c = (text, size, opts = {}) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: opts.after ?? 80 },
-    children: [new TextRun({ text, size, bold: opts.bold, color: opts.color, font: opts.font ?? L.HEAD_FONT, italics: opts.italics })] });
-  const noB = { style: BorderStyle.NONE, size: 0, color: "FFFFFF" };
-  const line = new Paragraph({ border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: "1F4E79", space: 1 } }, spacing: { after: 200 }, children: [] });
-  const memberRows = META.members.map((m, i) => [String(i + 1), m[0], m[1], m[2]]);
+  // Same layout as the class's group-report cover template (DIU logo, course name/code, topic, group table, teacher).
+  const F = L.BODY_FONT;
+  const c = (parts, opts = {}) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: opts.before ?? 0, after: opts.after ?? 80 },
+    children: parts.map(([text, o]) => new TextRun({ text, font: F, size: o.size, bold: o.bold, italics: o.italics, color: o.color })) });
+  const logo = fs.readFileSync(path.join(__dirname, "diu_logo.png"));
+  const memberRows = META.members.map((m, i) => [String(i + 1), m[0], m[1]]);
   return [
-    new Paragraph({ spacing: { before: 700 }, children: [] }),
-    c(META.university.toUpperCase(), 32, { bold: true, color: "1F4E79", after: 40 }),
-    c(META.dept, 24, { after: 240 }),
-    line,
-    c(META.course, 26, { bold: true, after: 60 }),
-    c(META.assignment, 24, { after: 60 }),
-    c(META.task, 24, { color: "2E75B6", bold: true, after: 300 }),
-    c(META.title, 36, { bold: true, color: "1F4E79", after: 120 }),
-    c("Dataset: six public-domain novels by Jane Austen (Project Gutenberg), 4.05 million characters", 21,
-      { italics: true, font: L.BODY_FONT, after: 360 }),
-    c(`Group Name: ${META.group}`, 26, { bold: true, after: 160 }),
-    ...table(["#", "Student Name", "Student ID", "Email"], memberRows, null, [500, 2600, 1900, 3300], { size: 22, centerFirst: true }),
-    new Paragraph({ spacing: { after: 1700 }, children: [] }),
-    new Table({
-      width: { size: L.CONTENT_W, type: WidthType.DXA }, columnWidths: [4513, 4513], layout: TableLayoutType.FIXED,
-      rows: [new TableRow({ children: [
-        new TableCell({ width: { size: 4513, type: WidthType.DXA }, borders: { top: noB, bottom: noB, left: noB, right: noB },
-          children: [new Paragraph({ children: [new TextRun({ text: "Submitted to:", bold: true, size: 23 })] }),
-            ...META.teacher.map((t, i) => new Paragraph({ children: [new TextRun({ text: t, size: 22, bold: i === 0 })] }))] }),
-        new TableCell({ width: { size: 4513, type: WidthType.DXA }, borders: { top: noB, bottom: noB, left: noB, right: noB },
-          children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: "Submitted by:", bold: true, size: 23 })] }),
-            new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: `Group: ${META.group}`, size: 22, bold: true })] }),
-            new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: "CSE638, Masters in CSE", size: 22 })] }),
-            new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: `Submission date: ${META.date}`, size: 22 })] })] }),
-      ] })],
-    }),
-    new Paragraph({ spacing: { before: 300 }, alignment: AlignmentType.CENTER, children: [
-      new TextRun({ text: "Codebase: ", bold: true, size: 22 }), new TextRun({ text: META.repo, size: 22, color: "1F4E79", underline: {} })] }),
+    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 400, after: 360 }, children: [
+      new D.ImageRun({ type: "png", data: logo, transformation: { width: 380, height: Math.round(380 * 233 / 840) },
+        altText: { title: "Daffodil International University", description: "DIU logo", name: "diu_logo" } })] }),
+    c([["Course Name: Deep Learning", { size: 32, bold: true }]], { after: 60 }),
+    c([["Course Code: CSE638", { size: 32, bold: true }]], { after: 80 }),
+    c([[`${META.assignment} — Group Report`, { size: 26 }]], { after: 360 }),
+    c([[`Task 3: ${META.title}`, { size: 28, bold: true, color: "2F5496" }]], { after: 160 }),
+    c([["Dataset: Project Gutenberg — six novels by Jane Austen (4.05 M characters)", { size: 24, italics: true }]], { after: 400 }),
+    c([["Group Name: ", { size: 28 }], [META.group, { size: 28, bold: true }]], { after: 160 }),
+    ...table(["#", "Student Name", "Student ID"], memberRows, null, [700, 4600, 3000], { size: 24, centerFirst: true }),
+    c([["Submitted to: ", { size: 28 }], [META.teacher[0], { size: 28, bold: true }], [" [Adj. Faculty]", { size: 28 }]], { before: 240, after: 60 }),
+    c([[META.teacher[3], { size: 28 }]], { after: 360 }),
+    c([["Submission date: ", { size: 28, bold: true }], [META.date, { size: 28 }]], { after: 240 }),
+    c([["Codebase: ", { size: 22, bold: true }], [META.repo, { size: 22, color: "2F5496" }]], { after: 0 }),
     pageBreak(),
   ];
 }
