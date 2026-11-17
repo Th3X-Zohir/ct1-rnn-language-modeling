@@ -36,7 +36,16 @@ const f2 = (x) => Number(x).toFixed(2);
 const n0 = (x) => Number(x).toLocaleString("en-US");
 
 // ------------------------------------------------------------------ cover page
+// Designed full-bleed cover (rendered by make_cover.py); the section has zero margins.
 function cover() {
+  return [new Paragraph({ spacing: { before: 0, after: 0, line: 240 }, children: [
+    new D.ImageRun({ type: "png", data: fs.readFileSync(path.join(__dirname, "cover_page.png")),
+      transformation: { width: 793, height: 1121 },
+      altText: { title: "Cover page", description: `${META.course} ${META.assignment}: ${META.title}. Group ${META.group}.`, name: "cover" } })] })];
+}
+
+// Plain text cover in the class template layout (kept for reference, not used).
+function coverTemplate() {
   // Same layout as the class's group-report cover template (DIU logo, course name/code, topic, group table, teacher).
   const F = L.BODY_FONT;
   const c = (parts, opts = {}) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: opts.before ?? 0, after: opts.after ?? 80 },
@@ -78,13 +87,12 @@ function tocPart() {
   return [
     new Paragraph({ spacing: { before: 240, after: 120 }, children: [new TextRun({ text: "Table of Contents", bold: true, size: 28, font: L.HEAD_FONT, color: "1F4E79" })] }),
     ...L.tocLines(L.headings.map((h) => ({ ...h, page: pages[h.text] }))),
-    pageBreak(),
   ];
 }
 
 function introduction() {
   return [
-    H1("1. Introduction"),
+    H1("1. Introduction", { newPage: true }),
     P("Language modeling — estimating the probability of the next symbol given everything that came before — is the core task behind text generation, autocompletion, speech recognition and modern large language models. Before Transformers, recurrent neural networks (RNNs) were the standard tool for this problem because they read a sequence one step at a time while carrying a hidden state that summarises the history."),
     P("This assignment addresses **Task 3 (RNN / Sequence Modeling)** of the CT1 task sheet: *train an RNN (vanilla, GRU, simple LSTM) for character-level or word-level language modeling / text generation, and compare different RNN variants, sequence length effects, sampling strategies, and perplexity.* We chose a **character-level** formulation: the vocabulary is tiny (75 symbols), there are no out-of-vocabulary words, and the model has to learn spelling, punctuation and grammar from raw characters, which makes the differences between recurrent cells clearly visible."),
     P("As data we use the six complete novels of Jane Austen from Project Gutenberg. A single-author corpus is stylistically consistent, so differences between models reflect modeling ability rather than domain shift, and the generated text can be judged easily by eye."),
@@ -336,7 +344,7 @@ const doc = new Document({
   creator: META.group, title: META.title, description: `${META.course} — ${META.assignment}`,
   styles: L.STYLES, numbering: L.NUMBERING, features: { updateFields: true },
   sections: [
-    { properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1300, bottom: 1300, left: 1440, right: 1440 } } },
+    { properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 0, bottom: 0, left: 0, right: 0, header: 0, footer: 0 } } },
       children: cover() },
     {
       properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1300, bottom: 1300, left: 1440, right: 1440 }, pageNumbers: { start: 1 } } },

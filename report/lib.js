@@ -38,7 +38,7 @@ const P = (text, opts = {}) => new Paragraph({
   spacing: { after: opts.after ?? 120, line: 300 }, ...(opts.para || {}),
 });
 const headings = [];   // collected for the static table of contents
-const H1 = (t) => { headings.push({ text: t, level: 1 }); return new Paragraph({ heading: HeadingLevel.HEADING_1, children: [new TextRun(t)] }); };
+const H1 = (t, opts = {}) => { headings.push({ text: t, level: 1 }); return new Paragraph({ heading: HeadingLevel.HEADING_1, pageBreakBefore: !!opts.newPage, children: [new TextRun(t)] }); };
 const H2 = (t) => { headings.push({ text: t, level: 2 }); return new Paragraph({ heading: HeadingLevel.HEADING_2, children: [new TextRun(t)] }); };
 const H3 = (t) => new Paragraph({ heading: HeadingLevel.HEADING_3, children: [new TextRun(t)] });
 const bullet = (t, level = 0) => new Paragraph({
