@@ -37,16 +37,35 @@ const P = (text, opts = {}) => new Paragraph({
   children: runs(text, opts.run || {}), alignment: opts.align ?? AlignmentType.JUSTIFIED,
   spacing: { after: opts.after ?? 120, line: 300 }, ...(opts.para || {}),
 });
-const H1 = (t) => new Paragraph({ heading: HeadingLevel.HEADING_1, children: [new TextRun(t)] });
-const H2 = (t) => new Paragraph({ heading: HeadingLevel.HEADING_2, children: [new TextRun(t)] });
+const headings = [];   // collected for the static table of contents
+const H1 = (t) => { headings.push({ text: t, level: 1 }); return new Paragraph({ heading: HeadingLevel.HEADING_1, children: [new TextRun(t)] }); };
+const H2 = (t) => { headings.push({ text: t, level: 2 }); return new Paragraph({ heading: HeadingLevel.HEADING_2, children: [new TextRun(t)] }); };
 const H3 = (t) => new Paragraph({ heading: HeadingLevel.HEADING_3, children: [new TextRun(t)] });
 const bullet = (t, level = 0) => new Paragraph({
   numbering: { reference: "bullets", level }, children: runs(t), spacing: { after: 60, line: 290 },
   alignment: AlignmentType.LEFT,
 });
-const numbered = (t, ref = "numbers") => new Paragraph({
-  numbering: { reference: ref, level: 0 }, children: runs(t), spacing: { after: 60, line: 290 },
-});
+// Passing a reference starts a NEW list (fresh instance -> numbering restarts at 1).
+let listInstance = 0;
+const numbered = (t, ref) => {
+  if (ref) listInstance += 1;
+  return new Paragraph({
+    numbering: { reference: "numbers", level: 0, instance: listInstance }, children: runs(t),
+    spacing: { after: 60, line: 290 },
+  });
+};
+
+// Static table of contents: entries [{text, level, page}] -> dot-leader lines with right-aligned page numbers.
+const { TabStopType, TabStopPosition, Tab } = D;
+const tocLines = (entries) => entries.map((e) => new Paragraph({
+  spacing: { after: e.level === 1 ? 60 : 30 }, indent: { left: e.level === 1 ? 0 : 400 },
+  tabStops: [{ type: TabStopType.RIGHT, position: CONTENT_W, leader: "dot" }],
+  children: [
+    new TextRun({ text: e.text, bold: e.level === 1, size: e.level === 1 ? 22 : 21 }),
+    new TextRun({ children: [new Tab()] }),
+    new TextRun({ text: String(e.page ?? "00"), bold: e.level === 1, size: e.level === 1 ? 22 : 21 }),
+  ],
+}));
 const pageBreak = () => new Paragraph({ children: [new PageBreak()] });
 const equation = (t) => new Paragraph({
   alignment: AlignmentType.CENTER, spacing: { before: 60, after: 120 },
@@ -154,5 +173,5 @@ const NUMBERING = {
   ],
 };
 
-module.exports = { D, P, H1, H2, H3, bullet, numbered, pageBreak, equation, figure, table, csv, json, runs,
+module.exports = { headings, D, P, H1, H2, H3, bullet, numbered, tocLines, pageBreak, equation, figure, table, csv, json, runs,
   STYLES, NUMBERING, CONTENT_W, ROOT, BODY_FONT, HEAD_FONT };

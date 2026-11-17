@@ -43,6 +43,7 @@ function cover() {
   const line = new Paragraph({ border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: "1F4E79", space: 1 } }, spacing: { after: 200 }, children: [] });
   const memberRows = META.members.map((m, i) => [String(i + 1), m[0], m[1], m[2]]);
   return [
+    new Paragraph({ spacing: { before: 700 }, children: [] }),
     c(META.university.toUpperCase(), 32, { bold: true, color: "1F4E79", after: 40 }),
     c(META.dept, 24, { after: 240 }),
     line,
@@ -54,7 +55,7 @@ function cover() {
       { italics: true, font: L.BODY_FONT, after: 360 }),
     c(`Group Name: ${META.group}`, 26, { bold: true, after: 160 }),
     ...table(["#", "Student Name", "Student ID", "Email"], memberRows, null, [500, 2600, 1900, 3300], { size: 22, centerFirst: true }),
-    new Paragraph({ spacing: { after: 280 }, children: [] }),
+    new Paragraph({ spacing: { after: 1700 }, children: [] }),
     new Table({
       width: { size: L.CONTENT_W, type: WidthType.DXA }, columnWidths: [4513, 4513], layout: TableLayoutType.FIXED,
       rows: [new TableRow({ children: [
@@ -64,7 +65,7 @@ function cover() {
         new TableCell({ width: { size: 4513, type: WidthType.DXA }, borders: { top: noB, bottom: noB, left: noB, right: noB },
           children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: "Submitted by:", bold: true, size: 23 })] }),
             new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: `Group: ${META.group}`, size: 22, bold: true })] }),
-            new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: "CSE638, MSc in CSE", size: 22 })] }),
+            new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: "CSE638, Masters in CSE", size: 22 })] }),
             new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: `Submission date: ${META.date}`, size: 22 })] })] }),
       ] })],
     }),
@@ -75,13 +76,21 @@ function cover() {
 }
 
 // ------------------------------------------------------------------ sections
-function abstractAndToc() {
+function abstractPart() {
   return [
-    H1("Abstract"),
+    new Paragraph({ heading: D.HeadingLevel.HEADING_1, children: [new TextRun("Abstract")] }),
     P(T.abstract(summary, byRun, ngram)),
     P(`**Keywords:** recurrent neural network, LSTM, GRU, character-level language model, bits per character, perplexity, text generation, sampling strategies.`),
-    new Paragraph({ spacing: { before: 240 }, children: [new TextRun({ text: "Table of Contents", bold: true, size: 28, font: L.HEAD_FONT, color: "1F4E79" })] }),
-    new TableOfContents("Table of Contents", { hyperlink: true, headingStyleRange: "1-2" }),
+  ];
+}
+
+// Static TOC; page numbers come from toc_pages.json written by the second build pass (finalize.py).
+function tocPart() {
+  const pf = path.join(__dirname, "toc_pages.json");
+  const pages = fs.existsSync(pf) ? JSON.parse(fs.readFileSync(pf, "utf8")) : {};
+  return [
+    new Paragraph({ spacing: { before: 240, after: 120 }, children: [new TextRun({ text: "Table of Contents", bold: true, size: 28, font: L.HEAD_FONT, color: "1F4E79" })] }),
+    ...L.tocLines(L.headings.map((h) => ({ ...h, page: pages[h.text] }))),
     pageBreak(),
   ];
 }
@@ -180,7 +189,7 @@ function modeling() {
       ["Schedule", "100-step linear warm-up, cosine decay to 0", "stable start, smooth convergence"],
       ["Steps", "2,500 (≈ 20.5 M characters ≈ 5.6 epochs)", "fixed compute budget for all runs"],
       ["Batch", "8,192 characters per step (batch = 8,192 / seq_len)", "equal compute per step across sequence lengths"],
-      ["Gradient clipping", "global norm 1.0", "prevents exploding gradients (crucial for the vanilla RNN)"],
+      ["Gradient clipping", "global norm 1.0", "safety net against exploding gradients (see Figure 9)"],
       ["Regularisation", "dropout 0.2 between layers and before the output", "reduces over-fitting"],
       ["Model selection", "best validation loss (every 250 steps)", "early-stopping style checkpointing"],
       ["Seed", "42 (data sampling and initialisation)", "reproducibility"],
@@ -332,6 +341,10 @@ function references() {
 }
 
 // ------------------------------------------------------------------ assemble
+const abstractBlock = abstractPart();
+const body = [...introduction(), ...dataSection(), ...workflow(), ...modeling(), ...results(),
+  ...discussion(), ...summarySection(), ...codebase(), ...references()];
+fs.writeFileSync(path.join(__dirname, "toc_headings.json"), JSON.stringify(L.headings.map((h) => h.text)));
 const doc = new Document({
   creator: META.group, title: META.title, description: `${META.course} — ${META.assignment}`,
   styles: L.STYLES, numbering: L.NUMBERING, features: { updateFields: true },
@@ -345,8 +358,7 @@ const doc = new Document({
         children: [new TextRun({ text: `${META.course} · ${META.assignment} · Group ${META.group}`, size: 17, color: "7F7F7F", font: L.HEAD_FONT })] })] }) },
       footers: { default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.CENTER,
         children: [new TextRun({ text: "Page ", size: 18, color: "7F7F7F" }), new TextRun({ children: [PageNumber.CURRENT], size: 18, color: "7F7F7F" })] })] }) },
-      children: [...abstractAndToc(), ...introduction(), ...dataSection(), ...workflow(), ...modeling(), ...results(),
-        ...discussion(), ...summarySection(), ...codebase(), ...references()],
+      children: [...abstractBlock, ...tocPart(), ...body],
     },
   ],
 });
