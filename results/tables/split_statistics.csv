@@ -1,0 +1,4 @@
+Split,Characters,Share (%)
+train,3642687,90.0
+val,202381,5.0
+test,202384,5.0

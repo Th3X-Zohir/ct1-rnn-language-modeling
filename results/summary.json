@@ -1,0 +1,10 @@
+{
+ "best_model": "E1_gru",
+ "best_test_bpc": 1.585,
+ "best_test_ppl": 3.0,
+ "rnn_test_bpc": 1.7661,
+ "gru_test_bpc": 1.585,
+ "lstm_test_bpc": 1.7261,
+ "best_ngram_test_bpc": 1.6528678219418642,
+ "unigram_entropy": 4.410801715500762
+}

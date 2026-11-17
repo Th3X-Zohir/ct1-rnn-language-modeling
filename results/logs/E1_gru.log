@@ -1,0 +1,11 @@
+[E1_gru] step   250  train 1.6235  val 1.4760 (2.129 bpc)     325s
+[E1_gru] step   500  train 1.3796  val 1.2636 (1.823 bpc)     601s
+[E1_gru] step   750  train 1.3054  val 1.1947 (1.724 bpc)     850s
+[E1_gru] step  1000  train 1.2729  val 1.1632 (1.678 bpc)    1112s
+[E1_gru] step  1250  train 1.2430  val 1.1420 (1.648 bpc)    1385s
+[E1_gru] step  1500  train 1.2283  val 1.1271 (1.626 bpc)    1667s
+[E1_gru] step  1750  train 1.2107  val 1.1169 (1.611 bpc)    1941s
+[E1_gru] step  2000  train 1.2044  val 1.1096 (1.601 bpc)    2215s
+[E1_gru] step  2250  train 1.2014  val 1.1063 (1.596 bpc)    2460s
+[E1_gru] step  2500  train 1.1975  val 1.1056 (1.595 bpc)    2712s
+[E1_gru] DONE  val 1.611 bpc  test 1.585 bpc  45.4 min

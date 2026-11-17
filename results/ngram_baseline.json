@@ -1,0 +1,29 @@
+[
+ {
+  "model": "Witten-Bell 3-gram",
+  "order": 3,
+  "val_bpc": 2.0782566480856124,
+  "test_bpc": 2.0576188721633115,
+  "test_ppl": 4.162986477324483,
+  "fit_s": 4.629729509353638,
+  "n_contexts": 12755
+ },
+ {
+  "model": "Witten-Bell 5-gram",
+  "order": 5,
+  "val_bpc": 1.681317446112145,
+  "test_bpc": 1.6528678219418642,
+  "test_ppl": 3.1445810524685927,
+  "fit_s": 13.361566066741943,
+  "n_contexts": 197465
+ },
+ {
+  "model": "Witten-Bell 7-gram",
+  "order": 7,
+  "val_bpc": 1.7465982005806007,
+  "test_bpc": 1.7030713652919605,
+  "test_ppl": 3.255933796438753,
+  "fit_s": 22.925279140472412,
+  "n_contexts": 1103472
+ }
+]

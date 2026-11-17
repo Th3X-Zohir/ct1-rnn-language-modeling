@@ -1,0 +1,11 @@
+[E3_lstm_h128] step   250  train 2.2058  val 2.0986 (3.028 bpc)      89s
+[E3_lstm_h128] step   500  train 1.9073  val 1.7980 (2.594 bpc)     190s
+[E3_lstm_h128] step   750  train 1.7648  val 1.6445 (2.373 bpc)     285s
+[E3_lstm_h128] step  1000  train 1.6773  val 1.5465 (2.231 bpc)     422s
+[E3_lstm_h128] step  1250  train 1.6181  val 1.4867 (2.145 bpc)     555s
+[E3_lstm_h128] step  1500  train 1.5835  val 1.4502 (2.092 bpc)     674s
+[E3_lstm_h128] step  1750  train 1.5579  val 1.4277 (2.060 bpc)     803s
+[E3_lstm_h128] step  2000  train 1.5473  val 1.4162 (2.043 bpc)     905s
+[E3_lstm_h128] step  2250  train 1.5427  val 1.4112 (2.036 bpc)    1050s
+[E3_lstm_h128] step  2500  train 1.5390  val 1.4103 (2.035 bpc)    1170s
+[E3_lstm_h128] DONE  val 2.047 bpc  test 2.027 bpc  19.5 min

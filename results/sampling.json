@@ -1,0 +1,84 @@
+{
+ "model": "E1_gru",
+ "reference_test_text": {
+  "valid_word_rate": 0.9969788519637462,
+  "distinct_1": 0.25954408129634715,
+  "distinct_2": 0.8142857142857143,
+  "repeat_4gram_rate": 0.0008246289169873133,
+  "n_words": 3641
+ },
+ "rows": [
+  {
+   "strategy": "greedy",
+   "valid_word_rate": 0.996206916294515,
+   "distinct_1": 0.1330773613046252,
+   "distinct_2": 0.17672908673410068,
+   "repeat_4gram_rate": 0.7843053721579699,
+   "n_words": 135.25,
+   "self_nll_bpc": 0.8318731782067265
+  },
+  {
+   "strategy": "temp_0.5",
+   "valid_word_rate": 0.9958772114591657,
+   "distinct_1": 0.5072275875957907,
+   "distinct_2": 0.8655314425105262,
+   "repeat_4gram_rate": 0.00681022388107654,
+   "n_words": 162.33333333333334,
+   "self_nll_bpc": 1.1141588294088511
+  },
+  {
+   "strategy": "temp_0.8",
+   "valid_word_rate": 0.9497076605222666,
+   "distinct_1": 0.6163797750813598,
+   "distinct_2": 0.9521985650441849,
+   "repeat_4gram_rate": 0.0,
+   "n_words": 153.41666666666666,
+   "self_nll_bpc": 1.3823479503455942
+  },
+  {
+   "strategy": "temp_1.0",
+   "valid_word_rate": 0.8998414427714398,
+   "distinct_1": 0.6708756742312777,
+   "distinct_2": 0.9754618431392119,
+   "repeat_4gram_rate": 0.0,
+   "n_words": 150.66666666666666,
+   "self_nll_bpc": 1.682132779849007
+  },
+  {
+   "strategy": "temp_1.3",
+   "valid_word_rate": 0.7438800989110873,
+   "distinct_1": 0.801266215599822,
+   "distinct_2": 0.9870129027287287,
+   "repeat_4gram_rate": 0.0,
+   "n_words": 135.66666666666666,
+   "self_nll_bpc": 2.3506417955937233
+  },
+  {
+   "strategy": "top_k_5",
+   "valid_word_rate": 0.9551097376836136,
+   "distinct_1": 0.5757024825416034,
+   "distinct_2": 0.9383176019922054,
+   "repeat_4gram_rate": 0.0,
+   "n_words": 156.25,
+   "self_nll_bpc": 1.3700503129384847
+  },
+  {
+   "strategy": "nucleus_0.9",
+   "valid_word_rate": 0.9713183035174403,
+   "distinct_1": 0.6124348164624139,
+   "distinct_2": 0.9578452761926886,
+   "repeat_4gram_rate": 0.0,
+   "n_words": 158.08333333333334,
+   "self_nll_bpc": 1.3613515233116276
+  }
+ ],
+ "examples": {
+  "greedy": "It is a truth universally acknowledged to be a sense of the same time to be a servant of the same time to be a servant of the same time to be a servant of the same time to be a servant of the same time to be a servant of the same time to be a servant of the same time to be a servant of the same time to her and her father and her father and her father and her own consideration of her father's consideration of her father's consideration of her father's consideration of her father's consideration of her father's consideration of her father's consideration of her father's consideration of her father's consideration of her father's consideration of her father's consideration of her father's consideration of her father's consideration of her father's consideration of her father's consideration of her father's consideration of her fa",
+  "temp_0.5": "It is a truth universally acknowledged as soon as the time to observe it. I think the first manner of her power, and she was a great deal to consider her and her door. She had good to the whole of the promise; and the strong employed her own than her that had been a great deal of giving us to say to her to a subject which had been a sort of attention, and the gratitude of the subject of the high speech and satisfaction to her being reasonable to the most afforded by his sister and attention and his wife and comfort of the street of the remaining of the house of the party, which she had not fancy of the most dear sense, and the happy to her father was completely formed in the subject of the consideration of his conduct, which they were at all the hope of having a thing to hear of the last strength and person and friendship and ",
+  "temp_0.8": "It is a truth universally acknowledged as soon else she were no consequence of very first party.\n\nThe danced confidence for her former father's supported away and observation, good exclaimed her hand. He was quite used to detempt the word of the brothers enough to persuade Edmund circumstance, and seen, and as soon as they were satisfaction at the instraints of any trettard, which he had set in the martion of the peeas was exceedingly.\n\nAfter all her sister of the hope of seeing her answer. He would not have been as lastors. But so little thing to her whren the last, in the whole of it soon and common, as understanding on Edmund and loved as the preparing himself by his addressing their children right to give the house, and regrets there was the hope of rather attention and a long heard what to see her friend, and even all the",
+  "temp_1.0": "It is a truth universally acknowledged as soon elseish long plocked, \"You would be a promise of my hating--ded Miss Woodhouse were more attached, his letter, and not our sisters ouing that do more than which-; hope she must have been a jokes to quite the end of the income-natural girls' wrate, and seen, in a subjects, their mother as well comfortable, has noble as much a great deal.\"\n\nCHAPTER XXV\n\nThat was not the evening. To be perfectly opinion hell week; only they were seople as to his writing. She was non effort that rusice of farth remained in this reply, Mrs. Gardiner, handsome together than any day.\"\n\n\"a share of From you are long appeared to be wondered in some of the with more of it as this. It was not endestringing to Miss Crawford; when I had but his other surprine for her feels on the Parsest and my friend.-.\n\nThe ",
+  "temp_1.3": "It is a truth universally acknowledged all mareely, sucloed Sio courage of others.\n\n\"If he should, but I sudden young loss to her at the bnotcefflew in the, I am not opogsing me ouing your descripty. 'He married tous).\n\nFonneet, howned, coming, quite the end of her in pleasances friate's upon, are sent, too askingly fondly umplosal, so greater to his, has noble as murety for evils, bot as they must be taken, nothing, or all those cleanssed an\" dearella endeavourh of distresson for at her Lard Procences and formfor that, or secures for.\n Heart was in pictrom soon, and ill, wherenot thing, Iman I, Emma.--\"Vernowars.\"\n\nLady Roiness abode whatever it we were not exhibition of the withy things, I asstrigh to him, to endost nine mother vinever. I am Hugh, to grativy attention?\"\n\n\"I left her sister;\" he anxieted her, and Elinor as go",
+  "top_k_5": "It is a truth universally acknowledged as soon as his attention of their apolotion. He was so made him and she consequent desire of his attaccess which to be an one against the positing the character. He was in spations to them, so well as she was not as handsome, and when they were so former, and seen, and as soon as their sister as well as to her astonishments. There was her own house with some part to supply a period at all of her brother's servent were attachment in short thought of it. He would not have been as a sorrow was so stay and true for a charm to Mrs. Gardiner, had the struck to them any past to a simploying, and have been stairs of tenderness which they shall hope that it concladity the morning. I am sure I can, if she was all the first pleasure attending it. I have heard you all supported him.\" Her family as th",
+  "nucleus_0.9": "It is a truth universally acknowledged as soon else she was placed on it. A very reason himself might have declared a lost to her at the two conversation of Mr. Rushworth's terror in the two man, and the marriages as much determined to repaid by by nothing of the easy which was well of his own address, who cannot leave him for Mr. Collins could not ast as the gratitude and been as he had set in what a table, may fasten the excuse had been of the rest. The first happy importance. I am not behaviour. Every body say her sons, she has far, and Mr. Darcy passed, soon as it was spertable to the most acquaintance to a share of the news of darred party which could be a good man; and on the rest of comfortable than her conduct, in his regret when they were contrary of the enough for a long, surprised to suppose that every thing of my d"
+ }
+}

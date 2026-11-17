@@ -1,0 +1,11 @@
+[E2_lstm_seq64] step   250  train 1.9408  val 1.8059 (2.605 bpc)     203s
+[E2_lstm_seq64] step   500  train 1.6386  val 1.5016 (2.166 bpc)     395s
+[E2_lstm_seq64] step   750  train 1.5056  val 1.3750 (1.984 bpc)     609s
+[E2_lstm_seq64] step  1000  train 1.4325  val 1.3038 (1.881 bpc)     820s
+[E2_lstm_seq64] step  1250  train 1.3880  val 1.2622 (1.821 bpc)    1020s
+[E2_lstm_seq64] step  1500  train 1.3619  val 1.2361 (1.783 bpc)    1260s
+[E2_lstm_seq64] step  1750  train 1.3455  val 1.2198 (1.760 bpc)    1574s
+[E2_lstm_seq64] step  2000  train 1.3326  val 1.2115 (1.748 bpc)    1872s
+[E2_lstm_seq64] step  2250  train 1.3236  val 1.2077 (1.742 bpc)    2200s
+[E2_lstm_seq64] step  2500  train 1.3267  val 1.2069 (1.741 bpc)    2580s
+[E2_lstm_seq64] DONE  val 1.757 bpc  test 1.731 bpc  43.2 min

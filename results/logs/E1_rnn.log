@@ -1,0 +1,11 @@
+[E1_rnn] step   250  train 1.7406  val 1.5942 (2.300 bpc)     122s
+[E1_rnn] step   500  train 1.5373  val 1.4014 (2.022 bpc)     278s
+[E1_rnn] step   750  train 1.4663  val 1.3321 (1.922 bpc)     421s
+[E1_rnn] step  1000  train 1.4319  val 1.2918 (1.864 bpc)     528s
+[E1_rnn] step  1250  train 1.4019  val 1.2700 (1.832 bpc)     669s
+[E1_rnn] step  1500  train 1.3881  val 1.2539 (1.809 bpc)     762s
+[E1_rnn] step  1750  train 1.3713  val 1.2416 (1.791 bpc)     865s
+[E1_rnn] step  2000  train 1.3632  val 1.2351 (1.782 bpc)     992s
+[E1_rnn] step  2250  train 1.3612  val 1.2315 (1.777 bpc)    1102s
+[E1_rnn] step  2500  train 1.3578  val 1.2306 (1.775 bpc)    1225s
+[E1_rnn] DONE  val 1.791 bpc  test 1.766 bpc  20.5 min

@@ -1,0 +1,8 @@
+Model,Test BPC,Test PPL
+Witten-Bell 3-gram,2.0576,4.163
+Witten-Bell 5-gram,1.6529,3.1446
+Witten-Bell 7-gram,1.7031,3.2559
+RNN (256x2),1.7661,3.401
+GRU (256x2),1.585,3.0
+LSTM (256x2),1.7261,3.308
+Best overall: E1_gru,1.585,3.0
