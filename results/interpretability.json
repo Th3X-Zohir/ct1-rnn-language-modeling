@@ -1,0 +1,87 @@
+{
+ "checkpoint": "E1_gru",
+ "n_chars": 60000,
+ "hidden_units": 256,
+ "units": [
+  {
+   "property": "inside quotation",
+   "best unit": 201,
+   "pearson r": -0.902,
+   "units with |r|>0.3": 1
+  },
+  {
+   "property": "next char starts a word",
+   "best unit": 112,
+   "pearson r": -0.795,
+   "units with |r|>0.3": 97
+  },
+  {
+   "property": "position inside word",
+   "best unit": 246,
+   "pearson r": 0.515,
+   "units with |r|>0.3": 48
+  },
+  {
+   "property": "capital letter",
+   "best unit": 65,
+   "pearson r": 0.217,
+   "units with |r|>0.3": 0
+  },
+  {
+   "property": "end of sentence",
+   "best unit": 133,
+   "pearson r": -0.389,
+   "units with |r|>0.3": 2
+  },
+  {
+   "property": "position in paragraph (log)",
+   "best unit": 150,
+   "pearson r": 0.186,
+   "units with |r|>0.3": 0
+  }
+ ],
+ "probes": [
+  {
+   "property": "inside quotation",
+   "type": "accuracy",
+   "hidden state": 0.8904,
+   "current char only": 0.5347,
+   "majority baseline": 0.57
+  },
+  {
+   "property": "next char starts a word",
+   "type": "accuracy",
+   "hidden state": 0.9962,
+   "current char only": 0.9895,
+   "majority baseline": 0.8146
+  },
+  {
+   "property": "position inside word",
+   "type": "R\u00b2",
+   "hidden state": 0.8169,
+   "current char only": 0.4235,
+   "majority baseline": 0.0
+  },
+  {
+   "property": "capital letter",
+   "type": "accuracy",
+   "hidden state": 0.9983,
+   "current char only": 0.9997,
+   "majority baseline": 0.9773
+  },
+  {
+   "property": "end of sentence",
+   "type": "accuracy",
+   "hidden state": 0.9997,
+   "current char only": 1.0,
+   "majority baseline": 0.9869
+  },
+  {
+   "property": "position in paragraph (log)",
+   "type": "R\u00b2",
+   "hidden state": -0.0089,
+   "current char only": -0.0022,
+   "majority baseline": 0.0
+  }
+ ]
+}

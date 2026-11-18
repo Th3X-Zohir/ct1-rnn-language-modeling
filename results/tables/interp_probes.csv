@@ -1,0 +1,7 @@
+property,type,hidden state,current char only,majority baseline
+inside quotation,accuracy,0.8904,0.5347,0.57
+next char starts a word,accuracy,0.9962,0.9895,0.8146
+position inside word,R²,0.8169,0.4235,0.0
+capital letter,accuracy,0.9983,0.9997,0.9773
+end of sentence,accuracy,0.9997,1.0,0.9869
+position in paragraph (log),R²,-0.0089,-0.0022,0.0

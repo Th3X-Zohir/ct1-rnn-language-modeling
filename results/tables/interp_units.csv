@@ -1,0 +1,7 @@
+property,best unit,pearson r,units with |r|>0.3
+inside quotation,201,-0.902,1
+next char starts a word,112,-0.795,97
+position inside word,246,0.515,48
+capital letter,65,0.217,0
+end of sentence,133,-0.389,2
+position in paragraph (log),150,0.186,0
