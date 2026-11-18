@@ -1,0 +1,15 @@
+\footnotesize
+\begin{tabular}{lrrr}
+\toprule
+Model & Val BPC & Test BPC & Test PPL \\
+\midrule
+Unigram (no context) & -- & 4.411 & 21.27 \\
+Witten--Bell 3-gram & 2.078 & 2.058 & 4.163 \\
+Witten--Bell 5-gram & 1.681 & 1.653 & 3.145 \\
+Witten--Bell 7-gram & 1.747 & 1.703 & 3.256 \\
+Vanilla RNN $256\times2$ & 1.791 & 1.766 & 3.401 \\
+LSTM $256\times2$ & 1.752 & 1.726 & 3.308 \\
+GRU $256\times2$ & 1.611 & 1.585 & 3.000 \\
+\textbf{GRU $256\times2$, long (E6)} & \textbf{1.519} & \textbf{1.498} & \textbf{2.824} \\
+\bottomrule
+\end{tabular}
