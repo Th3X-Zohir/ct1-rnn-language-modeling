@@ -110,6 +110,7 @@ function table(header, rows, caption, widths, opts = {}) {
     shading: isHead ? { fill: "1F4E79", type: ShadingType.CLEAR, color: "auto" }
       : shade ? { fill: shade, type: ShadingType.CLEAR, color: "auto" } : undefined,
     children: [new Paragraph({
+      keepNext: rows.length <= 8,      // short tables are kept on one page
       alignment: i === 0 && !opts.centerFirst ? AlignmentType.LEFT : AlignmentType.CENTER,
       children: runs(String(txt), { size: fs_, bold: isHead, color: isHead ? "FFFFFF" : undefined }),
     })],

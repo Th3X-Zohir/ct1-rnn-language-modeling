@@ -75,6 +75,39 @@ exports.discussion = (r, ng, s) => [
   `**Practical recommendation.** For character-level modeling on a CPU budget, a 2-layer GRU with 256 units and a 128–256-character window is the best choice; if more compute is available, increasing the hidden size gives more benefit than adding depth or lengthening the window. For generation, nucleus sampling (p ≈ 0.9) or temperature ≈ 0.8 should be used instead of greedy decoding.`,
 ];
 
+// ---------------------------------------------------------------- extensions (E6, interpretability, demo)
+exports.e6 = (r, fin, ng) => {
+  const g = bestNg(ng), k = fin.config.steps, gain = T(r, "E1_gru") - fin.test_bpc;
+  return [
+    `E1–E5 compare models under an *equal* budget. E6 asks a different question: how good does the winning configuration (2-layer GRU, 256 units, sequence length 128) become when it is simply trained longer? We trained it for ${k.toLocaleString("en-US")} steps instead of 2,500 (${(k / 2500).toFixed(1)}× the budget, ≈ ${((k * 8192) / 1e6).toFixed(0)} M characters or ${((k * 8192) / 3.64e6).toFixed(1)} epochs), with everything else unchanged.`,
+    `The longer run reaches **${f3(fin.test_bpc)} BPC on the test set (perplexity ${f3(fin.test_ppl)})**, ${f3(gain)} BPC better than the 2,500-step GRU and ${pct(g.test_bpc, fin.test_bpc)} % better than the best n-gram model (${f3(g.test_bpc)}). The validation curve (Figure 15) keeps falling throughout training, confirming the conclusion of E1–E3 that all models in the controlled study were limited by compute rather than by data or capacity.`,
+    `A practical note from this experiment: on our 16-core CPU server the small GRU trained **fastest with only 2 threads** (0.64 s per step) and five times slower with 12 threads (3.1 s per step), because the matrices are too small for multi-threading to pay off and the threads spend their time synchronising. Choosing the thread count by a short benchmark turned a run that would have taken about ${(k * 3.14 / 3600).toFixed(0)} hours into one of ${(fin.train_time_s / 60).toFixed(0)} minutes.`,
+  ];
+};
+
+exports.interp = (it) => {
+  const U = Object.fromEntries(it.units.map((u) => [u.property, u]));
+  const Pr = Object.fromEntries(it.probes.map((p) => [p.property, p]));
+  const q = U["inside quotation"], qp = Pr["inside quotation"], b = U["next char starts a word"];
+  const w = Pr["position inside word"], para = Pr["position in paragraph (log)"];
+  return [
+    `To see *what* the network has learned, we ran the best E1 model (GRU 256×2) over ${it.n_chars.toLocaleString("en-US")} characters of test text, recorded its ${it.hidden_units} top-layer hidden units at every step, and related them to six interpretable properties of the text (method of Karpathy et al., 2015). For each property we report the single most correlated unit and a **linear probe** — a logistic or linear regression trained on 70 % of the characters and tested on the remaining 30 % — compared with a probe that only sees the *current character*. If the hidden-state probe beats the current-character probe, the network must have stored information about the past.`,
+    `**A quotation detector emerged on its own.** Unit ${q["best unit"]} correlates with "inside a quotation" at |r| = ${Math.abs(q["pearson r"]).toFixed(2)} (Figure 16, top; the sign only says that its activation drops inside quotations): it switches state at an opening quotation mark, stays there for the whole speech — even across the narrator's interruption *"replied Darcy,"* where it briefly relaxes — and switches back when the quotation closes. A linear probe on the hidden state predicts whether the model is inside a quotation with **${(100 * qp["hidden state"]).toFixed(1)} % accuracy**, against ${(100 * qp["current char only"]).toFixed(1)} % from the current character and ${(100 * qp["majority baseline"]).toFixed(1)} % for the majority class. Nobody told the model what a quotation is; it learned to track one because closing the quotation correctly lowers the prediction loss.`,
+    `**Word structure is tracked as well.** Unit ${b["best unit"]} fires at word boundaries (|r| = ${Math.abs(b["pearson r"]).toFixed(2)}, Figure 16 bottom), and the position inside the current word is linearly decodable with R² = ${w["hidden state"].toFixed(2)} from the hidden state versus ${w["current char only"].toFixed(2)} from the current character alone. Capital letters and sentence ends, in contrast, are already given by the current character, so the hidden state adds nothing there (Figure 17). Finally, the position within a long paragraph is **not** represented (R² ≈ ${Math.max(0, para["hidden state"]).toFixed(2)}): with 128-character training windows the model never had a reason to count beyond about one sentence, which matches the long-range limitations seen in the generated text.`,
+  ];
+};
+
+exports.demo = (meta) => [
+  `To make the model tangible we built an **interactive browser demo** (\`demo/index.html\`). A short script exports the trained GRU weights to a 1.8 MB JavaScript file (float16), and a ${"~"}100-line JavaScript implementation of the GRU cell (\`demo/gru.js\`) runs the model directly in the browser — no server, no Python. The JavaScript output matches PyTorch to within 2·10⁻⁶ on the logits and reproduces the greedy sample character-for-character (\`demo/check_js.js\`).`,
+  `The page lets the user choose a prompt, the decoding strategy (greedy, temperature, top-k, nucleus), the temperature, p, k and the output length, and streams the generated text at several hundred characters per second (about 500–900 in our tests) on an ordinary laptop (Figure 18). It turns the sampling study of E5 into something one can explore by hand: switching to greedy immediately shows the repetition loops, and raising the temperature shows the model inventing words.`,
+];
+
+exports.extSummary = (fin, it) => {
+  const q = it.units.find((u) => u.property === "inside quotation");
+  const qp = it.probes.find((p) => p.property === "inside quotation");
+  return `Beyond the controlled study, training the best GRU ${(fin.config.steps / 2500).toFixed(1)}× longer (E6) lowered the test score to **${f3(fin.test_bpc)} BPC**. An interpretability analysis found a single hidden unit that tracks whether the text is inside a quotation (|r| = ${Math.abs(q["pearson r"]).toFixed(2)}; linear-probe accuracy ${(100 * qp["hidden state"]).toFixed(1)} % vs ${(100 * qp["current char only"]).toFixed(1)} % from the current character), and the final model runs live in a browser demo implemented in plain JavaScript.`;
+};
+
 exports.limitations = S.limitations;
 exports.future = S.future;
 

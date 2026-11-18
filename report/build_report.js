@@ -76,6 +76,7 @@ function abstractPart() {
   return [
     new Paragraph({ heading: D.HeadingLevel.HEADING_1, children: [new TextRun("Abstract")] }),
     P(T.abstract(summary, byRun, ngram)),
+    P(T.extSummary(json("results/final/E6_gru_long.json"), json("results/interpretability.json"))),
     P(`**Keywords:** recurrent neural network, LSTM, GRU, character-level language model, bits per character, perplexity, text generation, sampling strategies.`),
   ];
 }
@@ -270,6 +271,41 @@ function results() {
       new Paragraph({ spacing: { after: 100, line: 260 }, indent: { left: 360, right: 360 }, shading: { fill: "F5F7FA", type: ShadingType.CLEAR, color: "auto" },
         children: [new TextRun({ text: samp.examples[k].slice(0, 520).replace(/\s+/g, " ") + " …", font: "Courier New", size: 17 })] }),
     ]),
+    ...extensions(),
+  ];
+}
+
+// E6 (longer training), interpretability and the browser demo.
+function extensions() {
+  const fin = json("results/final/E6_gru_long.json");
+  const it = json("results/interpretability.json");
+  const probes = csv("interp_probes");
+  const g = ngram.reduce((a, b) => (a.test_bpc < b.test_bpc ? a : b));
+  return [
+    H2("5.6 E6 — Final model: training the best GRU longer"),
+    ...T.e6(byRun, fin, ngram).slice(0, 2).map((t) => P(t)),
+    ...table(["Model", "Training steps", "Val BPC", "Test BPC", "Test PPL", "Time (min)"], [
+      ["Best n-gram (Witten-Bell 5-gram)", "—", f3(g.val_bpc), f3(g.test_bpc), f3(g.test_ppl), "—"],
+      ["E1: GRU 256 × 2", "2,500", f3(byRun.E1_gru["Val BPC"]), f3(byRun.E1_gru["Test BPC"]), f3(byRun.E1_gru["Test PPL"]), byRun.E1_gru["Train time (min)"]],
+      ["E6: GRU 256 × 2 (final model)", fin.config.steps.toLocaleString("en-US"), f3(fin.best_val_bpc), f3(fin.test_bpc), f3(fin.test_ppl), (fin.train_time_s / 60).toFixed(1)],
+    ], "E6: the best configuration trained longer, compared with the E1 run and the best baseline.", [3300, 1300, 1100, 1100, 1100, 1100],
+    { highlight: (row) => row[0].startsWith("E6") }),
+    ...figure("e6_final_model", "E6 validation curve (GRU trained longer) compared with the 2,500-step GRU of E1; the dotted line is the best n-gram test score.", 5.4),
+    P(T.e6(byRun, fin, ngram)[2]),
+
+    H2("5.7 What did the GRU learn? Interpretability"),
+    ...T.interp(it).slice(0, 1).map((t) => P(t)),
+    ...table(["Property", "Probe on hidden state", "Probe on current char", "Majority / zero", "Metric"],
+      probes.map((p) => [p.property, Number(p["hidden state"]).toFixed(3), Number(p["current char only"]).toFixed(3), Number(p["majority baseline"]).toFixed(3), p.type]),
+      "Linear probes on the GRU hidden state (held-out 30 % of 60,000 test characters).", [3000, 1700, 1700, 1500, 1100],
+      { highlight: (row) => Number(row[1]) - Number(row[2]) > 0.1 }),
+    ...figure("interp_unit_activations", "Activation of two individual hidden units over a passage of *Pride and Prejudice* (test split). Top: a quotation-tracking unit. Bottom: a word-boundary unit. Red = high, blue = low.", 6.3),
+    ...T.interp(it).slice(1).map((t) => P(t)),
+    ...figure("interp_probes", "Left: linear-probe accuracy for binary properties. Right: strongest single-unit correlation per property."),
+
+    H2("5.8 Interactive browser demo"),
+    ...T.demo().map((t) => P(t)),
+    ...figure("demo_screenshot", "The browser demo generating text from the prompt “My dear Mr. Bennet,” with nucleus sampling.", 4.6),
   ];
 }
 
@@ -286,6 +322,7 @@ function summarySection() {
   return [
     H1("7. Summary and Future Work"),
     ...T.summary(byRun, ngram, summary).map((t) => P(t)),
+    P(T.extSummary(json("results/final/E6_gru_long.json"), json("results/interpretability.json"))),
     H2("7.1 Answers to the research questions"),
     ...T.answers(byRun, ngram, summary).map((t) => bullet(t)),
     H2("7.2 Future work"),
@@ -308,6 +345,10 @@ function codebase() {
       ["src/analysis.py", "EDA statistics and every figure / table of this report"],
       ["results/", "per-run JSON (config, history, metrics), logs, tables (CSV), figures (PNG), sampling results"],
       ["checkpoints/", "best checkpoint of every run (PyTorch state dict)"],
+      ["run_final_model.py", "E6: trains the best GRU for longer (results in results/final/)"],
+      ["src/interpret.py", "interpretability: unit correlations, linear probes, activation plots"],
+      ["demo/", "browser demo (index.html, JavaScript GRU, weight export, PyTorch check)"],
+      ["tests/", "16 unit tests (python -m unittest discover -s tests)"],
       ["report/", "this report (DOCX + PDF) and the script that builds it"],
     ], "Repository structure.", [3400, 5600], { size: 18 }),
     P("**Reproduce:** `pip install -r requirements.txt` → `python run_experiments.py --workers 3 --threads 4` (≈ 3 hours on a 16-core CPU; downloads the data automatically) → open and run the notebook. All random seeds are fixed (42); results on different hardware may differ in the third decimal because of non-deterministic multi-threaded CPU kernels."),
