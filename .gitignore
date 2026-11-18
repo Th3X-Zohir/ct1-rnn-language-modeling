@@ -13,3 +13,7 @@ report/s2.png
 report/toc_*.json
 report/node_modules
 results_final.log
+report/cover.png
+report/cover_prev.png
+report/first3.png
+report/ext.png

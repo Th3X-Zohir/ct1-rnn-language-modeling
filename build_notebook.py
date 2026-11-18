@@ -244,7 +244,59 @@ for prompt in ["Elizabeth looked at him", "\\"I cannot think"]:
 """)
 
 md("""
-## 6. Summary
+## 6. Extensions
+### 6.1 E6 — Final model: the best GRU trained longer
+E1–E5 compare models under an equal budget. E6 trains the winning configuration (GRU 256×2, seq 128) for 8,000 steps
+instead of 2,500 with `run_final_model.py` (results in `results/final/`). Note: this small GRU trains fastest on **2 CPU threads**;
+12 threads were 5× slower in our benchmark because the matrices are too small to parallelise well.
+""")
+code("""
+final = json.loads((ROOT / "results/final/E6_gru_long.json").read_text())
+A.fig_final_model(runs, final, best_ng); plt.show()
+e6 = pd.DataFrame([
+    {"Model": "Best n-gram (5-gram)", "Steps": "-", "Test BPC": round(best_ng, 4)},
+    {"Model": "E1 GRU 256x2", "Steps": 2500, "Test BPC": float(e1.loc[e1.Cell == "GRU", "Test BPC"].iloc[0])},
+    {"Model": "E6 GRU 256x2 (final)", "Steps": final["config"]["steps"], "Test BPC": round(final["test_bpc"], 4)},
+])
+A._tab(e6, "e6_final_model"); display(e6)
+print(f"E6 test perplexity {final['test_ppl']:.3f}, training time {final['train_time_s'] / 60:.1f} min")
+""")
+
+md("""
+### 6.2 What did the GRU learn? Interpretability
+`src/interpret.py` records the top-layer hidden state over 60,000 test characters, finds the unit most correlated with
+interpretable properties, and trains **linear probes** (70 % / 30 % split) on the hidden state versus on the current
+character only. A probe that beats the current-character probe proves the network stores information about the past.
+""")
+code("""
+from src import interpret
+units, probes = interpret.analyse("E1_gru")
+display(units); display(probes)
+display(Image(filename=str(ROOT / "results/figures/interp_unit_activations.png")))
+display(Image(filename=str(ROOT / "results/figures/interp_probes.png")))
+""")
+md("""
+**Finding:** one unit (out of 256) behaves as a *quotation detector*: it switches when a quotation opens, stays there
+through the speech and resets when it closes. The probe on the hidden state predicts "inside a quotation" far better
+than the current character can, and the position inside a word is also linearly decodable. Position within a long
+paragraph is not represented, consistent with the 128-character training windows.
+""")
+
+md("""
+### 6.3 Browser demo and unit tests
+`demo/export_weights.py` exports the GRU to `demo/model_weights.js` (float16), and `demo/gru.js` re-implements the GRU
+in plain JavaScript, so `demo/index.html` generates text live in any browser without a server. `demo/check_js.js`
+verifies the JavaScript output against PyTorch. The code base is covered by 16 unit tests.
+""")
+code("""
+import subprocess
+print(subprocess.run(["node", "demo/check_js.js"], capture_output=True, text=True).stdout)
+t = subprocess.run([sys.executable, "-m", "unittest", "discover", "-s", "tests"], capture_output=True, text=True)
+print(t.stderr.strip().splitlines()[-3:])
+""")
+
+md("""
+## 7. Summary
 The conclusions are written in the report from the tables above; the key numbers are printed below for reference.
 """)
 code("""
