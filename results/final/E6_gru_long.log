@@ -1,0 +1,17 @@
+[E6_gru_long] step   500  train 1.3767  val 1.2608 (1.819 bpc)     335s
+[E6_gru_long] step  1000  train 1.2708  val 1.1608 (1.675 bpc)     676s
+[E6_gru_long] step  1500  train 1.2273  val 1.1291 (1.629 bpc)    1033s
+[E6_gru_long] step  2000  train 1.1991  val 1.1074 (1.598 bpc)    1371s
+[E6_gru_long] step  2500  train 1.1804  val 1.0936 (1.578 bpc)    1730s
+[E6_gru_long] step  3000  train 1.1740  val 1.0812 (1.560 bpc)    2091s
+[E6_gru_long] step  3500  train 1.1601  val 1.0753 (1.551 bpc)    2431s
+[E6_gru_long] step  4000  train 1.1498  val 1.0665 (1.539 bpc)    2750s
+[E6_gru_long] step  4500  train 1.1413  val 1.0593 (1.528 bpc)    3062s
+[E6_gru_long] step  5000  train 1.1368  val 1.0545 (1.521 bpc)    3394s
+[E6_gru_long] step  5500  train 1.1268  val 1.0496 (1.514 bpc)    3742s
+[E6_gru_long] step  6000  train 1.1289  val 1.0471 (1.511 bpc)    4081s
+[E6_gru_long] step  6500  train 1.1206  val 1.0444 (1.507 bpc)    4405s
+[E6_gru_long] step  7000  train 1.1209  val 1.0426 (1.504 bpc)    4729s
+[E6_gru_long] step  7500  train 1.1158  val 1.0417 (1.503 bpc)    5065s
+[E6_gru_long] step  8000  train 1.1146  val 1.0415 (1.503 bpc)    5431s
+[E6_gru_long] DONE  val 1.519 bpc  test 1.498 bpc  90.6 min

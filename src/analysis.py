@@ -296,6 +296,22 @@ def fig_tradeoff(tab: pd.DataFrame):
     return _save(fig, "tradeoff")
 
 
+def fig_final_model(runs: dict, final: dict, ngram_bpc: float):
+    """E6: validation curve of the long GRU run next to the 2,500-step GRU from E1."""
+    fig, ax = plt.subplots(figsize=(7.2, 3.6))
+    h0 = runs["E1_gru"]["history"]; h1 = final["history"]
+    ax.plot(h1["eval_step"], np.array(h1["val_loss"]) / LN2, "o-", ms=3, color=PALETTE["gru"], lw=1.6,
+            label=f"E6: GRU, {final['config']['steps']:,} steps")
+    ax.plot(h0["eval_step"], np.array(h0["val_loss"]) / LN2, "s--", ms=3, color=PALETTE["lstm"], lw=1.2,
+            label="E1: GRU, 2,500 steps")
+    ax.axhline(ngram_bpc, color=PALETTE["ngram"], ls=":", lw=1.2)
+    ax.text(final["config"]["steps"], ngram_bpc + 0.01, f"best n-gram (test) {ngram_bpc:.3f}", ha="right",
+            fontsize=8, color=PALETTE["ngram"])
+    ax.set_ylim(top=2.0); ax.set_xlabel("training step"); ax.set_ylabel("validation BPC")
+    ax.set_title("E6: the same GRU trained longer"); ax.legend(fontsize=8.5)
+    return _save(fig, "e6_final_model")
+
+
 def fig_sampling(samp: dict):
     df = pd.DataFrame(samp["rows"])
     ref = samp["reference_test_text"]

@@ -1,0 +1,4 @@
+Model,Steps,Test BPC
+Best n-gram (5-gram),-,1.6529
+E1 GRU 256x2,2500,1.585
+E6 GRU 256x2 (final),8000,1.4977
