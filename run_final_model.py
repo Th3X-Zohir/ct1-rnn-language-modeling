@@ -1,11 +1,11 @@
 """E6 — final model: the best configuration of the controlled study (2-layer GRU, 256 units,
-sequence length 128) trained 6x longer (15,000 steps instead of 2,500).
+sequence length 128) trained 3.2x longer (8,000 steps instead of 2,500).
 
 E1–E5 compare architectures under an *equal* budget; E6 answers a different question:
 how good does the winning architecture get when it is simply trained longer?
 Results are written to results/final/ so that they do not mix with the controlled comparison.
 
-Usage:  nice -n 19 python run_final_model.py --threads 12
+Usage:  nice -n 19 python run_final_model.py --threads 2
 """
 from __future__ import annotations
 
@@ -22,12 +22,12 @@ from src.train import LN2, Config, evaluate, train
 
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "results" / "final"
-STEPS = 15_000
+STEPS = 8_000
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--threads", type=int, default=12)
+    ap.add_argument("--threads", type=int, default=2)   # small GRUs train fastest on 2 threads (see benchmark in report)
     ap.add_argument("--steps", type=int, default=STEPS)
     a = ap.parse_args()
     torch.set_num_threads(a.threads)
