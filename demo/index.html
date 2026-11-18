@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Austen GRU — Live Demo</title>
+<style>
+  :root { --navy:#0b2545; --teal:#00798c; --gold:#e3a82b; --ink:#1b1f2a; --muted:#5b6475; --panel:#f3f6fa; --line:#dbe3ec; --bg:#ffffff; }
+  @media (prefers-color-scheme: dark) { :root { --ink:#e6eaf0; --muted:#a3adbd; --panel:#172234; --line:#2a3850; --bg:#0e1624; } }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color:var(--ink); background:var(--bg); }
+  header { background: linear-gradient(135deg, var(--navy), #13315c); color:#fff; padding:28px 16px 22px; border-bottom:4px solid var(--gold); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+  header .tag { display:inline-block; background:var(--teal); padding:4px 12px; border-radius:99px; font-size:12px; font-weight:700; letter-spacing:.06em; }
+  header h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(24px, 4vw, 34px); margin:12px 0 6px; }
+  header p { margin:0; color:#cfe0f2; font-size:14px; }
+  main { padding: 22px 0 40px; }
+  .grid { display:grid; grid-template-columns: 1fr 290px; gap:18px; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  label { display:block; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin:12px 0 6px; }
+  textarea, select, input[type=number] { width:100%; font: inherit; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 10px; }
+  textarea { min-height:70px; resize:vertical; font-family: Georgia, serif; font-size:16px; }
+  input[type=range] { width:100%; accent-color: var(--teal); }
+  .row { display:flex; justify-content:space-between; font-size:13px; color:var(--muted); }
+  button { width:100%; margin-top:16px; padding:12px; font-weight:700; font-size:15px; border:0; border-radius:10px; cursor:pointer; background:var(--teal); color:#fff; }
+  button.secondary { background:transparent; color:var(--teal); border:1px solid var(--teal); margin-top:8px; }
+  button:disabled { opacity:.55; cursor:wait; }
+  #out { font-family: Georgia, "Times New Roman", serif; font-size:17px; line-height:1.65; white-space:pre-wrap; min-height:320px; }
+  #out .prompt { background: rgba(227,168,43,.25); border-radius:4px; }
+  #out .cursor { display:inline-block; width:8px; background:var(--teal); animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+  .stats { display:grid; grid-template-columns: repeat(3,1fr); gap:10px; margin-top:14px; }
+  .stat { background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:10px; }
+  .stat b { display:block; font-size:20px; color:var(--teal); }
+  .stat span { font-size:12px; color:var(--muted); }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .chip { font-size:12px; padding:5px 10px; border-radius:99px; border:1px solid var(--line); background:var(--bg); cursor:pointer; }
+  footer { color:var(--muted); font-size:12px; text-align:center; padding:18px 16px 30px; }
+  #loading { color:var(--muted); }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <span class="tag">CSE638 · CT1 TASK 3 · RECURRENT MINDS</span>
+  <h1>Write like Jane Austen — a character-level GRU, live in your browser</h1>
+  <p>The trained model from our study runs entirely in JavaScript: no server, every character is predicted on your device.</p>
+</div></header>
+<main class="wrap">
+  <div class="grid">
+    <section class="card">
+      <label for="prompt">Prompt</label>
+      <textarea id="prompt">It is a truth universally acknowledged</textarea>
+      <div class="chips" id="chips"></div>
+      <label>Generated text</label>
+      <div id="out"><span id="loading">Loading model…</span></div>
+      <div class="stats">
+        <div class="stat"><b id="sChars">0</b><span>characters generated</span></div>
+        <div class="stat"><b id="sSpeed">–</b><span>characters / second</span></div>
+        <div class="stat"><b id="sBpc">–</b><span>model test BPC</span></div>
+      </div>
+    </section>
+    <aside class="card">
+      <label for="strategy">Decoding strategy</label>
+      <select id="strategy">
+        <option value="nucleus" selected>Nucleus (top-p) — recommended</option>
+        <option value="temperature">Temperature sampling</option>
+        <option value="topk">Top-k sampling</option>
+        <option value="greedy">Greedy (always most likely)</option>
+      </select>
+      <label for="temp">Temperature</label>
+      <input type="range" id="temp" min="0.2" max="1.5" step="0.05" value="0.8">
+      <div class="row"><span>focused</span><span id="tempV">0.80</span><span>creative</span></div>
+      <label for="topp">Top-p (nucleus)</label>
+      <input type="range" id="topp" min="0.5" max="1" step="0.01" value="0.9">
+      <div class="row"><span>0.5</span><span id="toppV">0.90</span><span>1.0</span></div>
+      <label for="topk">Top-k</label>
+      <input type="number" id="topk" min="1" max="75" value="5">
+      <label for="len">Length (characters)</label>
+      <input type="range" id="len" min="100" max="1500" step="50" value="600">
+      <div class="row"><span>100</span><span id="lenV">600</span><span>1500</span></div>
+      <button id="go" disabled>Generate</button>
+      <button id="stop" class="secondary" disabled>Stop</button>
+      <p style="font-size:12px;color:var(--muted);margin:14px 0 0" id="modelInfo"></p>
+    </aside>
+  </div>
+</main>
+<footer>Model: 2-layer GRU character language model trained on six Jane Austen novels (Project Gutenberg).
+  Code: github.com/Th3X-Zohir/ct1-rnn-language-modeling</footer>
+<script src="model_weights.js"></script>
+<script src="gru.js"></script>
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  let model = null, running = false;
+  const prompts = ["It is a truth universally acknowledged", "\"My dear Mr. Bennet,\"", "Emma Woodhouse, handsome,",
+                   "Captain Wentworth", "The weather was", "Elizabeth looked at him"];
+  prompts.forEach((p) => { const c = document.createElement("span"); c.className = "chip"; c.textContent = p;
+    c.onclick = () => { $("prompt").value = p; }; $("chips").appendChild(c); });
+  const sync = () => { $("tempV").textContent = (+$("temp").value).toFixed(2); $("toppV").textContent = (+$("topp").value).toFixed(2);
+    $("lenV").textContent = $("len").value; };
+  ["temp", "topp", "len"].forEach((id) => $(id).addEventListener("input", sync)); sync();
+  setTimeout(() => {
+    model = new CharGRU(window.MODEL_META, window.MODEL_TENSORS);
+    const m = window.MODEL_META;
+    $("sBpc").textContent = m.test_bpc.toFixed(3);
+    $("modelInfo").textContent = `Checkpoint ${m.name}: GRU ${m.hidden}×${m.layers}, ${(m.params / 1e6).toFixed(2)} M parameters, ` +
+      `${m.steps.toLocaleString()} training steps, vocabulary ${m.vocab.length} characters.`;
+    $("out").innerHTML = "<span style='color:var(--muted)'>Pick a prompt and press Generate.</span>";
+    $("go").disabled = false;
+  }, 30);
+  $("stop").onclick = () => { running = false; };
+  $("go").onclick = () => {
+    const prompt = $("prompt").value.split("").filter((c) => c in model.stoi).join("") || "The";
+    const opts = { strategy: $("strategy").value, temperature: +$("temp").value, topP: +$("topp").value, topK: +$("topk").value };
+    const total = +$("len").value;
+    model.reset(); let logits = model.feed(prompt);
+    const out = $("out"); out.innerHTML = "";
+    const p = document.createElement("span"); p.className = "prompt"; p.textContent = prompt; out.appendChild(p);
+    const gen = document.createElement("span"); out.appendChild(gen);
+    const cur = document.createElement("span"); cur.className = "cursor"; cur.innerHTML = "&nbsp;"; out.appendChild(cur);
+    let n = 0; const t0 = performance.now(); running = true; $("go").disabled = true; $("stop").disabled = false;
+    function tick() {
+      // generate for ~25 ms, then append the chunk once (one DOM update per batch) and yield to the browser
+      const end = performance.now() + 25; let chunk = "";
+      while (running && n < total && performance.now() < end) {
+        const k = model.pick(logits, opts); chunk += model.meta.vocab[k]; logits = model.step(k); n++;
+      }
+      gen.textContent += chunk;
+      $("sChars").textContent = n; $("sSpeed").textContent = Math.round(n / ((performance.now() - t0) / 1000));
+      if (running && n < total) setTimeout(tick, 0);
+      else { running = false; cur.remove(); $("go").disabled = false; $("stop").disabled = true; }
+    }
+    setTimeout(tick, 0);
+  };
+})();
+</script>
+</body>
+</html>
